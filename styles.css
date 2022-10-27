@@ -5,19 +5,17 @@
 }
 
 body {
-    font-family: 'Robotto', sans-serif;
+    font-family: 'Roboto Condensed', sans-serif;
     height: 100vh;
     display: flex;
 }
 
 .col {
     flex: 1;
-    background: red;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    border: 1px solid black;
 }
 
 .col h2 {

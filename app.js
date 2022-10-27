@@ -1,19 +1,38 @@
 const cols = document.querySelectorAll('.col')
 
-const generateRandomColor = () => {
-    const hexCodes = '0123456789ABCDEF'
+// Рандомные цвета без использования библиотек 
 
-    let color = ''
+// const generateRandomColor = () => {
+//     const hexCodes = '0123456789ABCDEF'
 
-    for (let i = 0; i < 6; i++) {
-        color += hexCodes[Math.floor(Math.random() * hexCodes.length)]
+//     let color = ''
+
+//     for (let i = 0; i < 6; i++) {
+//         color += hexCodes[Math.floor(Math.random() * hexCodes.length)]
+//     }
+//     return '#' + color
+// }
+
+document.addEventListener('keydown', (event) => {
+    if (event.code.toLocaleLowerCase() === 'space') {
+        setRandomCalors()
     }
-    return '#' + color
+})
+
+const setTextolor = (text, color) => {
+    const luminance = chroma(color).luminance()
+    text.style.color = luminance > 0.5 ? 'black' : 'white'
 }
 
 const setRandomCalors = () => {
     cols.forEach(col => {
-        col.style.background = generateRandomColor()
+        const text = col.querySelector('h2')
+        const button = col.querySelector('button')
+        const color = chroma.random()
+        
+        setTextolor(text, color)
+        setTextolor(button, color)
+        col.style.background = color
     })
 }
 
