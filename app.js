@@ -13,27 +13,83 @@ const cols = document.querySelectorAll('.col')
 //     return '#' + color
 // }
 
-document.addEventListener('keydown', (event) => {
-    if (event.code.toLocaleLowerCase() === 'space') {
+document.addEventListener('keydown', (evt) => {
+    evt.preventDefault()
+
+    if (evt.code.toLocaleLowerCase() === 'space') {
         setRandomCalors()
     }
 })
 
-const setTextolor = (text, color) => {
+document.addEventListener('click', (evt) => {
+    const type = evt.target.dataset.type
+
+    if (type === 'lock') {
+        const node = evt.target.tagName.toLocaleLowerCase() === 'i' ? evt.target : evt.target.children[0]
+        node.classList.toggle('fa-lock-open')
+        node.classList.toggle('fa-lock')
+    } else if (type === 'copy') {
+        copyToClickboard(evt.target.textContent)
+    }
+})
+
+function copyToClickboard(text) {
+    return navigator.clipboard.writeText(text)
+} 
+
+function setRandomCalors(isInitial) {
+    const colors = isInitial ? getColorsFromHash : []
+
+    cols.forEach((col, index) => {
+        const isLocked = col.querySelector('i').classList.contains('fa-lock')
+        const text = col.querySelector('h2')
+        const button = col.querySelector('button')
+        const color = isInitial 
+            ? colors[index] 
+                ? colors[index]
+                : chroma.random()
+            : chroma.random()
+        
+        if (isLocked) {
+            colors.push(text.textContent)
+            return
+        }
+
+        if (!isInitial) {
+            colors.push(color)
+        }
+
+        col.style.background = color
+        text.textContent = color
+
+        setTextolor(text, color)
+        setTextolor(button, color)
+    })
+
+    updateColorsHash(colors)
+}
+
+function setTextolor(text, color) {
     const luminance = chroma(color).luminance()
     text.style.color = luminance > 0.5 ? 'black' : 'white'
 }
 
-const setRandomCalors = () => {
-    cols.forEach(col => {
-        const text = col.querySelector('h2')
-        const button = col.querySelector('button')
-        const color = chroma.random()
-        
-        setTextolor(text, color)
-        setTextolor(button, color)
-        col.style.background = color
-    })
+function updateColorsHash(colors = []) {
+    document.location.hash = colors
+        .map((col) => {
+            return col.toString().substring(1)
+        })
+        .join('-')
 }
 
-setRandomCalors()
+function getColorsFromHash() {
+    if (document.location.hash.length > 1) {
+        return document.location.hash
+            .substring(1)
+            .split('-')
+            .map((color) => '#' + color)
+    }
+    return []
+}
+
+setRandomCalors(true)
