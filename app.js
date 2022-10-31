@@ -1,4 +1,5 @@
 const cols = document.querySelectorAll('.col')
+const colBtn = document.querySelector('.generate-colors')
 
 // Рандомные цвета без использования библиотек 
 
@@ -17,6 +18,12 @@ document.addEventListener('keydown', (evt) => {
     evt.preventDefault()
 
     if (evt.code.toLocaleLowerCase() === 'space') {
+        setRandomCalors()
+    }
+})
+
+document.addEventListener('click', (evt) => {
+    if (evt.target === colBtn) {
         setRandomCalors()
     }
 })
